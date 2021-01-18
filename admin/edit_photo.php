@@ -3,30 +3,36 @@
     if(!$session->is_signed_in()) {
         redirect("login.php");
     }
-?>
-<?php
+
     if(empty($_GET['id'])) {
         redirect("photos.php");
-    } else {
+    } 
 
-        $photo = Photo::find_by_id($_GET['id']);
+    $photo = Photo::find_by_id($_GET['id']);
 
-        if(isset($_POST['update'])) {
-            if($photo) {
-                $photo->title = $_POST['title'];
-                $photo->caption = $_POST['caption'];
-                $photo->alternate_text = $_POST['alternate_text'];
-                $photo->description = $_POST['description'];
+    if(isset($_POST['update'])) {
+        if($photo) {
+            $photo->title = $_POST['title'];
+            $photo->caption = $_POST['caption'];
+            $photo->alternate_text = $_POST['alternate_text'];
+            $photo->description = $_POST['description'];
 
+            if(isset($_FILES['filename'])) { 
+                $photo->set_file($_FILES['filename']);
+                $photo->upload_photo_edit();
                 $photo->save();
+                // redirect("edit_photo.php?id={$photo->id}");
+                $session->message("The photo {$photo->title} with photo has been updated");
+                redirect("photos.php");
             }
         }
     }
+    
 ?>
     <!-- Navigation -->
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <!-- Brand and toggle get grouped for better mobile display -->
-<?php include("includes/top_nav.php"); ?>  
+<?php include("includes/top_nav.php"); ?> 
             <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
 <?php include("includes/side_nav.php"); ?> 
         <!-- /.navbar-collapse -->
@@ -43,14 +49,16 @@
                     Photos
                     <small>Subheading</small>
                 </h1>
-                <form action="" method="POST">
+                <form action="" method="POST" enctype="multipart/form-data">
                     <div class="col-md-8">
                         <div class="form-group">
                             <input type="text" name="title" class="form-control" value="<?php echo $photo->title; ?>">
                         </div>
                         <div class="form-group">
-                            <a class="thumbnail" href=""><img height="100px" width="150px" src="<?php echo $photo->picture_path(); ?>" alt=""></a>
+                            <a href="" class="thumbnail"><img height="100px" width="150px" src="<?php echo $photo->image_path_and_placeholder(); ?>" alt=""></a>
+                            
                         </div>
+                        <input type="file" name="filename" class="form-control">
                         <div class="form-group">
                             <label for="caption">Caption</label>
                             <input type="text" name="caption" class="form-control" value="<?php echo $photo->caption; ?>">
@@ -68,6 +76,7 @@
                         <div  class="photo-info-box">
                             <div class="info-box-header">
                             <h4>Save <span id="toggle" class="glyphicon glyphicon-menu-up pull-right"></span></h4>
+                            
                         </div>
                         <div class="inside">
                             <div class="box-inner">
@@ -93,13 +102,13 @@
                                 </div>
                                 <div class="info-box-update pull-right ">
                                     <input type="submit" name="update" value="Update" class="btn btn-primary btn-lg ">
-                                </div>   
+                                </div>
+                            </div>  
                             </div>
                         </div>          
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
         </div>
         <!-- /.row -->
 

@@ -13,9 +13,10 @@
         $photo->caption = $_POST['caption'];
         $photo->alternate_text = $_POST['alternate_text'];
         $photo->description = $_POST['description'];
+        $photo->user_id = $_SESSION['user_id'];
         $photo->set_file($_FILES['file_upload']);
 
-        if($photo->save()) {
+        if($photo->save()) {  
             $message = "Photo uploaded successfully";
         } else {
             $message = join("<br>", $photo->errors);
@@ -42,30 +43,37 @@
                     Upload
                     <small>Subheading</small>
                 </h1>
-                <div class="col-md-6">
-                <?php echo $message; ?>
-                    <form action="" method="POST" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label for="title">Title</label>
-                            <input type="text" name="title" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="caption">Caption</label>
-                            <input type="text" name="caption" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="alternate_text">Alternate Text</label>
-                            <input type="text" name="alternate_text" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <label for="description">Description</label>
-                            <input type="text" name="description" class="form-control">
-                        </div>
-                        <div class="form-group">
-                            <input type="file" name="file_upload">
-                        </div>
-                        <input type="submit" name="submit" class="btn btn-primary">
-                    </form>
+                <div class="row">
+                    <div class="col-md-6">
+                        <?php echo $message; ?>
+                        <form action="" method="POST" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label for="title">Title</label>
+                                <input type="text" name="title" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="caption">Caption</label>
+                                <input type="text" name="caption" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="alternate_text">Alternate Text</label>
+                                <input type="text" name="alternate_text" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <textarea name="description" id="" cols="30" rows="10"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input type="file" name="file_upload">
+                            </div>
+                            <input type="submit" name="submit" class="btn btn-primary">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <form action="upload.php" class="dropzone"></form>
                 </div>
             </div>
         </div>
